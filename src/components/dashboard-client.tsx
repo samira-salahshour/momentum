@@ -130,7 +130,7 @@ export function DashboardClient() {
                           Current streak
                         </dt>
                         <dd className="mt-1 font-semibold text-slate-950">
-                          {currentStreak(goalEntries, goal.target, today)} days
+                          {currentStreak(goalEntries, today)} days
                         </dd>
                       </div>
                       <div className="px-4">

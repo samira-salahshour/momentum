@@ -1,33 +1,24 @@
-import { shiftDateKey, toDateKey } from "@/src/lib/dates";
-import type { ProgressEntry } from "@/src/lib/types";
+import { parseDateKey, shiftDateKey, toDateKey } from "./dates.ts";
+import type { ProgressEntry } from "./types.ts";
 
 export function progressPercentage(value: number, target: number): number {
   if (!Number.isFinite(value) || !Number.isFinite(target) || target <= 0) {
     return 0;
   }
 
-  return Math.max(0, Math.round((value / target) * 100));
+  return Math.min(100, Math.max(0, Math.round((value / target) * 100)));
 }
 
 export function currentStreak(
   entries: ProgressEntry[],
-  target: number,
   today = toDateKey(),
 ): number {
-  if (!Number.isFinite(target) || target <= 0) {
-    return 0;
-  }
+  const loggedDates = new Set(entries.map((entry) => entry.date));
 
-  const completedDates = new Set(
-    entries
-      .filter((entry) => entry.value >= target)
-      .map((entry) => entry.date),
-  );
-
-  let cursor = completedDates.has(today) ? today : shiftDateKey(today, -1);
+  let cursor = loggedDates.has(today) ? today : shiftDateKey(today, -1);
   let streak = 0;
 
-  while (completedDates.has(cursor)) {
+  while (loggedDates.has(cursor)) {
     streak += 1;
     cursor = shiftDateKey(cursor, -1);
   }
@@ -39,10 +30,21 @@ export function weeklyAverage(
   entries: ProgressEntry[],
   today = toDateKey(),
 ): number {
-  const startDate = shiftDateKey(today, -6);
-  const total = entries
-    .filter((entry) => entry.date >= startDate && entry.date <= today)
-    .reduce((sum, entry) => sum + entry.value, 0);
+  const todayDate = parseDateKey(today);
+  if (!todayDate) {
+    return 0;
+  }
 
-  return Math.round((total / 7) * 10) / 10;
+  const daysSinceMonday = (todayDate.getDay() + 6) % 7;
+  const startDate = shiftDateKey(today, -daysSinceMonday);
+  const weekEntries = entries.filter(
+    (entry) => entry.date >= startDate && entry.date <= today,
+  );
+
+  if (weekEntries.length === 0) {
+    return 0;
+  }
+
+  const total = weekEntries.reduce((sum, entry) => sum + entry.value, 0);
+  return Math.round((total / weekEntries.length) * 10) / 10;
 }

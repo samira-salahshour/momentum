@@ -188,9 +188,12 @@ export function saveProgressEntry(
     id: existing?.id ?? createId(),
   };
 
-  const nextEntries = existing
-    ? entries.map((item) => (item.id === existing.id ? savedEntry : item))
-    : [...entries, savedEntry];
+  const nextEntries = [
+    ...entries.filter(
+      (item) => item.goalId !== entry.goalId || item.date !== entry.date,
+    ),
+    savedEntry,
+  ];
 
   return writeArray(PROGRESS_STORAGE_KEY, nextEntries) ? savedEntry : null;
 }
