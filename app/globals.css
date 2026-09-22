@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
 }
 
 @theme inline {
@@ -12,15 +12,84 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+button,
+a,
+select,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-heading {
+  @apply mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between;
+}
+
+.page-title {
+  @apply mt-1 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl;
+}
+
+.page-description {
+  @apply mt-3 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base;
+}
+
+.eyebrow {
+  @apply text-xs font-bold uppercase tracking-[0.18em] text-indigo-600;
+}
+
+.section-heading {
+  @apply mb-4 flex items-end justify-between gap-4;
+}
+
+.section-title {
+  @apply mt-1 text-xl font-bold tracking-tight text-slate-950;
+}
+
+.nav-link {
+  @apply inline-flex rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+}
+
+.primary-link,
+.secondary-link {
+  @apply inline-flex min-h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+}
+
+.primary-link {
+  @apply bg-indigo-600 text-white hover:bg-indigo-700;
+}
+
+.secondary-link {
+  @apply border border-slate-300 bg-white text-slate-900 shadow-sm hover:border-slate-400 hover:bg-slate-50;
+}
+
+.text-link {
+  @apply text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:underline;
+}
+
+.field-label {
+  @apply mb-2 block text-sm font-medium text-slate-900;
+}
+
+.select-field {
+  @apply min-h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-base text-slate-900 shadow-sm outline-none transition focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20;
+}
+
+.metric-pill {
+  @apply inline-flex whitespace-nowrap rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700;
+}
+
+.progress-track {
+  @apply h-2 overflow-hidden rounded-full bg-slate-100;
+}
+
+.progress-value {
+  @apply block h-full rounded-full bg-indigo-600 transition-[width];
+}
+
+.empty-card {
+  @apply border-dashed;
 }
