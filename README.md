@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Momentum
 
-## Getting Started
+Momentum is a lightweight consistency and goal-tracking application built with Next.js and TypeScript.
 
-First, run the development server:
+It allows users to create measurable goals, log daily progress, track streaks, view weekly averages, and review progress history.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Create measurable goals
+- Track daily progress
+- Update progress for the same goal and date without duplicates
+- View current streak
+- View weekly average
+- View recent activity and history
+- Persistent local storage
+- Empty, validation, loading, and success states
+- Responsive UI
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Supported goal types
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Steps
+- Water
+- Reading
+- Workout
+- Meditation
+- Custom
 
-## Learn More
+## Tech stack
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js
+- React
+- TypeScript
+- App Router
+- Tailwind CSS
+- `@samira-salahshour/ui`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## UI component library
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Momentum consumes my reusable React UI package:
 
-## Deploy on Vercel
+`@samira-salahshour/ui`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The package is published separately and contains reusable components such as:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Button
+- Input
+- Card
+- Modal
+
+This keeps generic UI components separate from application-specific business logic.
+
+## Architecture
+
+The application keeps persistence, business logic, and presentation separate.
+
+Key areas:
+
+- `src/lib/storage.ts` - localStorage persistence
+- `src/lib/analytics.ts` - progress, streak, and weekly average calculations
+- `src/lib/dates.ts` - date-related utilities
+- `src/components/` - application-specific interactive components
+
+Local storage is intentionally isolated behind a small persistence layer so it can later be replaced with an API or database without coupling the rest of the application to browser storage.
+
+## Data model
+
+```ts
+type Goal = {
+  id: string;
+  title: string;
+  metric: GoalMetric;
+  target: number;
+  unit: string;
+  startDate: string;
+  endDate: string;
+};
+
+type ProgressEntry = {
+  id: string;
+  goalId: string;
+  date: string;
+  value: number;
+};
